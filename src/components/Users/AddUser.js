@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Card from "../UI/Card";
 import classes from './AddUser.module.css';
 import Button from "../UI/Button";
+import ErrorModal from "../UI/ErrorModal";
+
 
 const AddUser = props => {
     const [enteredUsername, setEnteredUsername] = useState('');
@@ -20,11 +22,12 @@ const AddUser = props => {
         if (+enteredAge < 1) {
             setError({
               title: 'Invalid age',
-              message: 'Please enter age',
+              message: 'ROOKIE MISTAKE',
             });
             return;
           }
-        console.log(enteredUsername, enteredAge);
+        // console.log(enteredUsername, enteredAge);
+        props.onAddUser(enteredUsername, enteredAge);
         setEnteredAge('');
         setEnteredUsername('');
 
@@ -37,9 +40,16 @@ const AddUser = props => {
     const ageChangeHandler = (event) => {
         setEnteredAge(event.target.value);
     };
+    const errorHandler = () => {
+        setError(null);
+      };
 
 
     return (
+        <div>
+            {error && (
+        <ErrorModal title={error.title} message={error.message} onConfirm={errorHandler} />
+            )}
         <Card className={classes.input}>
             <form onSubmit={addUserHandler}>
                 <label htmlFor='username'>Username:</label>
@@ -49,6 +59,7 @@ const AddUser = props => {
                 <Button type='submit'>Add user</Button>
             </form>
         </Card>
+        </div>
     )
 };
 
